@@ -1,10 +1,9 @@
-from src import monobank_handler
 from datetime import datetime, date, timedelta
-from utils import to_timestamp
-from signature import SignKey
-from transport import api_request
-from handler_utils import add_handler, CheckPayHandler
-from handler_utils import add_webhook_handler, Webhooks
+from monobank_handler.utils import to_timestamp
+from monobank_handler.signature import SignKey
+from monobank_handler.transport import api_request
+from monobank_handler.handler_utils import add_handler, CheckPayHandler
+from monobank_handler.handler_utils import add_webhook_handler, Webhooks
 
 
 

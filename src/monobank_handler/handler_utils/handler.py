@@ -1,5 +1,5 @@
-from transport import api_request
-from utils import get_utc
+from monobank_handler.transport import api_request
+from monobank_handler.utils import get_utc
 from .freezone import handlers
 import asyncio
 

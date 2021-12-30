@@ -1,5 +1,4 @@
 import requests
-from src import monobank_handler
 
 ENDPOINT = "https://api.monobank.ua"
 UAGENT = "python-monobank_handler"
