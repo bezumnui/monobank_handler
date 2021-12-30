@@ -1,5 +1,5 @@
 import requests
-
+from monobank_handler.errors import TooManyRequests, Error
 ENDPOINT = "https://api.monobank.ua"
 UAGENT = "python-monobank_handler"
 
@@ -17,8 +17,8 @@ def api_request(method, path, **kwargs):
         return response.json()
 
     if response.status_code == 429:
-        raise monobank_handler.TooManyRequests("Too many requests", response)
+        raise TooManyRequests("Too many requests", response)
 
     data = response.json()
     message = data.get("errorDescription", str(data))
-    raise monobank_handler.Error(message, response)
+    raise Error(message, response)

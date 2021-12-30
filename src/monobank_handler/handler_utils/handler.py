@@ -57,7 +57,6 @@ class CheckPayHandler:
                                 func(answer)
 
 
-
 #   {'id': 'WD06LyvgYq8m5x2D', 'time': 1640816055, 'description': 'Максим Кривий', 'comment': 'даун', 'mcc': 4829,
 #   'originalMcc': 4829, 'amount': -10, 'operationAmount': -10, 'currencyCode': 980, 'commissionRate': 0,
 #   'cashbackAmount': 0, 'balance': 28250, 'hold': True, 'receiptId': '93C1-35ME-31PX-C89B'}

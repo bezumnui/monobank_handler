@@ -76,7 +76,7 @@ class ClientBase(object):
         return self.make_request("POST", "/personal/webhook", json={"webHookUrl": url, })
 
 
-class Client(Webhooks, ClientBase, CheckPayHandler):
+class Client(ClientBase, Webhooks, CheckPayHandler):
     """Personal API"""
 
     def __init__(self, token):
@@ -87,7 +87,7 @@ class Client(Webhooks, ClientBase, CheckPayHandler):
             "X-Token": self.token,
         }
     def run_webhook(self, url, port=3000, route="/webhook", host="0.0.0.0"):
-        super(Client, self).run_webhook(url, port, route, host)
+        super(ClientBase, self).run_webhook(url, port, route, host)
 
 
 class CorporateClient(ClientBase):
