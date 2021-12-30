@@ -11,7 +11,7 @@ class SignKey(object):
         self.sk = self._load()
 
     def key_id(self):
-        "Returns monobank X-Key-Id"
+        "Returns monobank_handler X-Key-Id"
         publicKey = self.sk.get_verifying_key()
         publicKeyB64 = base64.b64encode(publicKey.to_der())
 

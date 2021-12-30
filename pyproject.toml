@@ -1,20 +1,4 @@
-[tool.poetry]
-name = "monobank"
-version = "0.4.4"
-description = "Monobank.ua API implementation"
-readme = "README.md"
-homepage = "https://github.com/vitalik/python-monobank"
-authors = ["Vitaliy Kucheryaviy <ppr.vitaly@gmail.com>"]
-
-
-[tool.poetry.dependencies]
-python = "^3.6"
-requests = "^2.22"
-ecdsa = "^0.13.2"
-
-[tool.poetry.dev-dependencies]
-pytest = "^3.0"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=0.12", "ecdsa>= 0.17.0", "flask>=2.0.0"]
 build-backend = "poetry.masonry.api"

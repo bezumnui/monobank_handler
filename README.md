@@ -1,4 +1,6 @@
-# python-monobank
+# monobank_handler
+## forked and modded from:
+https://github.com/vitalik/python-monobank
 
 ![GitHub-issues](https://img.shields.io/github/issues/vitalik/python-monobank)
 
@@ -9,7 +11,7 @@ Python client for Monobank API (https://api.monobank.ua/docs/)
 ## Installation
 
 ```
-pip install monobank
+pip install monobank_handler
 ```
 
 
@@ -22,14 +24,37 @@ pip install monobank
 2) Use that token to initialize client:
 
 ```python
-  import monobank
-  token = 'xxxxxxxxxxxxxxx'
 
-  mono = monobank.Client(token)
-  user_info = mono.get_client_info()
-  print(user_info)
+from src import monobank_handler
+
+token = 'xxxxxxxxxxxxxxx'
+
+mono = monobank_handler.Client(token)
+user_info = mono.get_client_info()
+print(user_info)
 ```
+# MODDED:
+## AMOUNT WITHOUT POINTS! 
+### example:
+if you need 10.57 UAH - write amount=1057
 
+if you need 1.00 UAH - write amount=100
+## poll handler (sync/async):
+```
+@mono.pay_handler(amount=0, comment=None, may_be_bigger=True)
+def func(pay_history):  #   may be async
+    print(pay_history)
+mono.run()  #   for async use await mono.start(account="0") or
+            #   await mono.idle(account="0")
+```
+## webhook handler (sync):
+```
+@mono.pay_handler_webhook(amount=0, account=None, comment=None, may_be_bigger=True)
+def func(pay_history):  
+    print(pay_history)
+mono.run_webhook(http://your.web.address:port/route, port=3000, route="/webhook", host="0.0.0.0")
+```
+##  or you can do it by yourself using mono.
 ### Methods
 
 Get currencies

@@ -1,17 +1,57 @@
-import monobank
+from src import monobank_handler
 from datetime import datetime, date, timedelta
-from monobank.utils import to_timestamp
-from monobank.signature import SignKey
-from monobank.transport import api_request
+from utils import to_timestamp
+from signature import SignKey
+from transport import api_request
+from handler_utils import add_handler, CheckPayHandler
+from handler_utils import add_webhook_handler, Webhooks
+
 
 
 class ClientBase(object):
-    def _get_headers(self, url):
+    def _get_headers(self, url) -> dict:
         raise NotImplementedError("Please implement _get_headers")
 
     def make_request(self, method, path, **kwargs):
         headers = self._get_headers(path)
         return api_request(method, path, headers=headers, **kwargs)
+
+    def pay_handler(self, amount=0, comment=None, may_be_bigger=True):
+        """WORKING ONLY ONCE PER MINUTE!!\n
+        ALSO WORKING IN POLL
+        :return: pay_history"""
+        def handler(func):
+            assert amount >= 0, "amount may be bigger than 0"
+            add_handler(func, amount, comment, may_be_bigger)
+        return handler
+
+    def pay_handler_webhook(self, amount=0, account=None, comment=None, may_be_bigger=True):
+        """WORKING ONLY WITH SERVER!!\n
+        running with await run_webhook()
+        :return: pay_history"""
+        def handler(func):
+            assert amount >= 0, "amount may be bigger than 0"
+            add_webhook_handler(func, amount, comment, may_be_bigger, account)
+        return handler
+
+    def pay_history(self, from_: str, account: str = "0", to: str = None, # path
+                    time_: str = None, request_id: str = None, sign: str = None,  # header
+                     ):
+        ...
+        if to:
+            url = f"/personal/statement/{account}/{from_}/{to}"
+        else:
+            url = f"/personal/statement/{account}/{from_}"
+
+        headers = self._get_headers(url)
+        #   headers["X-Key-Id"] = key_id
+        if time_:
+            headers["X-Time"] = time_
+        if request_id:
+            headers["X-Request-Id"] = request_id
+        if sign:
+            headers["X-Sign"] = sign
+        return api_request("GET", url, headers=headers)
 
     def get_currency(self):
         return self.make_request("GET", "/bank/currency")
@@ -34,11 +74,11 @@ class ClientBase(object):
         return self.make_request("GET", url)
 
     def create_webhook(self, url):
-        return self.make_request("POST", "/personal/webhook", json={"webHookUrl": url,})
+        return self.make_request("POST", "/personal/webhook", json={"webHookUrl": url, })
 
 
-class Client(ClientBase):
-    "Personal API"
+class Client(Webhooks, ClientBase, CheckPayHandler):
+    """Personal API"""
 
     def __init__(self, token):
         self.token = token
@@ -47,10 +87,12 @@ class Client(ClientBase):
         return {
             "X-Token": self.token,
         }
+    def run_webhook(self, url, port=3000, route="/webhook", host="0.0.0.0"):
+        super(Client, self).run_webhook(url, port, route, host)
 
 
 class CorporateClient(ClientBase):
-    "Corporate API"
+    """Corporate API"""
 
     def __init__(self, request_id, private_key):
         self.request_id = request_id
@@ -71,7 +113,7 @@ class CorporateClient(ClientBase):
         try:
             self.make_request("GET", "/personal/auth/request")
             return True
-        except monobank.Error as e:
+        except monobank_handler.Error as e:
             if e.response.status_code == 401:
                 return False
             raise
