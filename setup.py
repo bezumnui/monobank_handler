@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="monobank_handler",
-    version="0.1.2",
+    version="0.1.4",
     author="bezumnui",
     author_email="bezumnui.mistikgt@gmail.com",
     description="Monobank.ua API implementation with handlers(poll/webhook)",
