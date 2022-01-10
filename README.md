@@ -2,9 +2,9 @@
 ## forked and modded from:
 https://github.com/vitalik/python-monobank
 
-![GitHub-issues](https://img.shields.io/github/issues/vitalik/python-monobank)
+![GitHub-issues](https://img.shields.io/github/issues/bezumnui/monobank_handler)
 
-![python-monobank](https://raw.githubusercontent.com/vitalik/python-monobank/master/docs/logo.png)
+![python-monobank](https://raw.githubusercontent.com/bezumnui/monobank_handler/master/docs/logo.png)
 
 Python client for Monobank API (https://api.monobank.ua/docs/)
 
@@ -25,7 +25,7 @@ pip install monobank_handler
 
 ```python
 
-from src import monobank_handler
+import monobank_handler
 
 token = 'xxxxxxxxxxxxxxx'
 
@@ -40,7 +40,10 @@ if you need 10.57 UAH - write amount=1057
 
 if you need 1.00 UAH - write amount=100
 ## poll handler (sync/async):
-```
+```python
+import monobank_handler
+mono = monobank_handler.Client('token')
+
 @mono.pay_handler(amount=0, comment=None, may_be_bigger=True)
 def func(pay_history):  #   may be async
     print(pay_history)
@@ -48,11 +51,33 @@ mono.run()  #   for async use await mono.start(account="0") or
             #   await mono.idle(account="0")
 ```
 ## webhook handler (sync):
-```
+```python
+import monobank_handler
+mono = monobank_handler.Client('token')
+
 @mono.pay_handler_webhook(amount=0, account=None, comment=None, may_be_bigger=True)
 def func(pay_history):  
     print(pay_history)
-mono.run_webhook(http://your.web.address:port/route, port=3000, route="/webhook", host="0.0.0.0")
+mono.run_webhook(url="http://your.web.address:port/route", port=3000, route="/webhook", host="0.0.0.0")
+```
+
+### mono.run_webhook():
+
+If you want to start a webhook from another **thread**, you can may to field
+the url parameter, and point out it via
+`
+mono.create_webhook(url)
+`(outside the thread, where webhook was started by `mono.run_webhook()`
+
+
+## or you can register it by hand:
+```python
+#   func - something callable (coroutine friendly)
+#   for pooling:
+mono.register_polling_handler(func, amount=0, comment=None, may_be_bigger=True)
+
+#   for webhooks:
+mono.register_webhook_handler(func, amount=0, account=None, comment=None, may_be_bigger=True)
 ```
 ##  or you can do it by yourself using mono.
 ### Methods
