@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "monobank_handler"
-version = "0.1.7"
+version = "0.1.8"
 description = "Monobank.ua API implementation with handlers(poll/webhook)"
 readme = "README.md"
 homepage = "https://github.com/bezumnui/monobank_handler"

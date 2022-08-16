@@ -63,7 +63,7 @@ mono.run_webhook(url="http://your.web.address:port/route", port=3000, route="/we
 
 ### mono.run_webhook():
 
-If you want to start a webhook from another **thread**, you can may to field
+If you want to start a webhook from another **thread**, you may not to field
 the url parameter, and point out it via
 `
 mono.create_webhook(url)
